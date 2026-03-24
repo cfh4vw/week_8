@@ -1,0 +1,57 @@
+1. What makes a model "linear"? "Linear" in what?
+
+    A model is linear if there is a linear, straight-line relationship between X and Y.
+    It is linear in both the parameters and the predictor variable. None of
+    the parameters appear in exponential form or are ever multiplied by/divided by
+    another parameter. This includes the predictor variable, the X only ever appears
+    to the first power.
+
+2. How do you interpret the coefficient for a dummy/one-hot-encoded variable? 
+   (This is a trick question, and the trick involves how you handle the intercept of 
+   the model.) There's further explanation at the end of this document, if needed.
+
+    If you do not include the intercept in your model, the coefficient of each dummy/one-hot-encoded
+    variable is the mean value of the target variable for that group. We found this in section q1,
+    question 1.
+    If you include the intercept in your model, the intercept will be the mean of the target
+    variable for the reference group (the dummy variable that was dropped when we code
+    drop_first = True in the original pd.get_dummies). Then, the coefficients of each dummy
+    variable after that will be the difference between their sample mean of the target variable and
+    the sample mean of the reference group (which is the intercept!). We found this relationship 
+    to be true in section q1, question 2.
+
+3. Can linear regression be used for classification? Explain why, or why not.
+
+    In some cases, linear regression can be used for classification (as seen in my model for
+    section q3), but it is generally not the best practice. Linear regression assumes a continuous
+    relationship between X and Y, and classification problems, especially binary ones, violate
+    that assumption. In these cases, General Linear Models (GLMs) should be used instead, 
+    which could include models such as logistic regression!
+
+4. If you have a high accuracy on training but low on testing, what might be the problem? It also 
+   might be you see a pattern in the residuals. 
+
+    If you have a high accuracy on the training data and a low accuracy on the testing data, this
+    could mean that your model is overfit to the training data. This means that it is extremely 
+    good at predicting on the training data, but it fails to generalize these predictions to 
+    previously unseen data, or the test data in this case. If this happens, we would see a 
+    pattern in the residual plot for the test data predictions. Ideally, we would have complete
+    randomness, but if you see a pattern, it means that your model has some built in bias.
+
+5. Review the linked page. What are two ways to incorporate nonlinear relationships between 
+   your target/response/dependent/outcome variable y and your features/control/response/independent 
+   variables x?
+
+    You can incorporate nonlinear relationships between x and y by choosing a model that
+    accomodates these relationships, such as the decision tree regressor shown in the textbook.
+    Or, you could modify the data itself! You can do this by using scikitlearn's PolynomialFeatures
+    to create new features from the existing ones, or you could utilize data transformations such
+    as log or arcsinh transformations.
+
+6. What is the interpretation of the intercept? A slope coefficient for a variable? 
+   The coefficient for a dummy/one-hot-encoded variable?
+
+    The intercept of a model is the value of the target variable (y) when the predictor variable
+    (x) is equal to zero. The slope coefficient for a variable represents the additional gains
+    in y as x moves forward 1 unit. The coefficient of a dummy/one-hot-encoded variable is just 
+    the mean of the target variable for that group.
