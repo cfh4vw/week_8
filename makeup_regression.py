@@ -1,4 +1,5 @@
 
+# %%
 # ============================================================================
 # Regression Overview — In-Class Live Coding Example
 # Dataset: Facebook Performance Metrics (UCI ML Repo ID 368)
@@ -113,7 +114,7 @@ print(f"With Intercept: Coefficient = {model_with.coef_[0]:.4f}, Intercept = {mo
 print(f"Without Intercept: Coefficient = {model_without.coef_[0]:.4f}, R² = {model_without.score(X_simple, y_target):.4f}")
 
 
-# %%
+
 # KEY POINT: Unless your domain knowledge justifies it, always keep the intercept.
 # Forcing through the origin biases the slope estimate when y != 0 at x=0.
 
@@ -131,27 +132,27 @@ print(f"Without Intercept: Coefficient = {model_without.coef_[0]:.4f}, R² = {mo
 # Select a handful of numeric features, that are most correlated with Total Interactions
 # correlation matrix
 
-# %% create numeric_features dataframe 
 numeric_features = df.select_dtypes(include=[np.number])
-# %%
 corr_matrix = numeric_features.corr('pearson')
 corr_with_target = corr_matrix['Total Interactions'].abs().sort_values(ascending=False)
-
-# %%
 corr_with_target.head()
+#corr_matrix = df.corr()
+#corr_with_target = corr_matrix['Total Interactions'].abs().sort_values(ascending=False)
 
-# %%
-# select some kinda middle of the road features
-mlr_features = corr_with_target[5:11].index.tolist()  # Exclude the target variable itself   
+mlr_features = corr_with_target[5:11].index.tolist()
 
-# now you try pick some real terrible variables and see what happens
-
-# %%
 # visualize the correlations with a matrix plot
-sns.heatmap(corr_matrix[mlr_features + ['Total Interactions']], 
-            annot=True, cmap='coolwarm', center=0)
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr_matrix[mlr_features + ['Total Interactions']], annot=True, cmap='coolwarm', center=0)
 plt.title('Correlation Matrix')
 plt.show()
+
+# %%
+# this is old code, don't need
+# select some kinda middle of the road features
+# numeric_features = corr_with_target[5:11].index.tolist()  # Exclude the target variable itself   
+
+# now you try pick some real terrible variables and see what happens
 
 # %%
 df_mv = df[mlr_features + ['Total Interactions']]
@@ -180,7 +181,7 @@ print(f"R²: {model_mv.score(X_mv, y_mv):.4f}")
 #   - Reduces the influence of outliers
 #   - Can improve model fit and residual normality
 #
-# log(x): works only for strictly positive values (x > 0)
+# log(x):    works only for strictly positive values (x > 0)
 # arcsinh(x): works for zero and negative values — a generalization of log
 #             arcsinh(x) ≈ log(2x) for large x, but handles 0s gracefully
 
@@ -218,7 +219,6 @@ print(coef_df_trans.to_string(index=False))
 
 print(f"\nIntercept: {model_trans.intercept_:.2f}")
 print(f"R²: {model_trans.score(X_trans, y_trans):.4f}")
-
 
 # =============================================================================
 # SECTION 6: Polynomial Features from sklearn
@@ -279,15 +279,12 @@ for degree in [1, 2, 3]:
 
 # %%
 # Use the same features as the multivariate regression listed in the numeric feature list
-X_final = df[mlr_features].dropna() 
+X_final = df[mlr_features].dropna()
 y_final = df.loc[X_final.index, 'Total Interactions']
-
 X_train, X_test, y_train, y_test = train_test_split(
-    X_final, y_final, test_size=0.2, random_state=42)
-
+    X_final, y_final, test_size=0.2, random_state=42
+)
 model_final = LinearRegression().fit(X_train, y_train)
-
-# %%
 y_pred = model_final.predict(X_test)    
 # True vs. Predicted plot
 plt.figure(figsize=(6, 6))
@@ -297,6 +294,8 @@ plt.xlabel('True Values')
 plt.ylabel('Predicted Values')
 plt.title('True vs. Predicted Values')
 plt.show()
+
+
 
 
 # %%
@@ -311,6 +310,7 @@ print(f"R² Score: {r2:.4f}")
 
 # range of the target variable in the test set
 print(f"Range of Total Interactions in Test Set: {y_test.min()} to {y_test.max()}")
+
 
 
 
